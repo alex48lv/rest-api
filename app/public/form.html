@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+    <title>Document</title>
+</head>
+
+<body onload="init()">
+    <form id="myForm" method="post" action="http://localhost:3000/api/users">
+        <div class="flex-container">
+            <div class="col">
+                <label for="firstname">First name*</label>
+                <input type="text" id="firstname" name="firstname" placeholder="..." required>
+                <label for="lastname">Last name</label>
+                <input type="text" id="lastname" name="lastname" placeholder="...">
+                <label for="email">E-mail*</label>
+                <input type="text" id="email" name="email" placeholder="...@..." required>
+                <p>* - <i>required fields must be filled in.</i></p>
+            </div>
+            <div class="col">
+                <label for="login">Login*</label>
+                <input type="text" id="login" name="login" placeholder="..." required>
+                <label for="password">Password*</label>
+                <input type="password" id="password" name="password" placeholder="***" required>
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" placeholder="Country, city ...">
+                <label for="phone">Phone number</label>
+                <input type="tel" id="phone" name="phone" placeholder="+371 ...">
+            </div>
+        </div>
+        <button type="submit">Get started</button>
+    </form>
+    <table id="myTable">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>firstname</th>
+                <th>lastname</th>
+                <th>email</th>
+                <th>login</th>
+                <th>password</th>
+                <th>address</th>
+                <th>phone number</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        myForm.onsubmit = async (e) => {
+            // e = event
+            e.preventDefault();
+
+            let formData = new FormData(myForm);
+            let json_data = JSON.stringify(Object.fromEntries(formData));
+            let req = await fetch('http://localhost:3000/api/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: json_data
+            })
+
+            let res = await req.json();
+            console.log(res);
+        }
+
+        function init() {
+            fetch('http://localhost:3000/api/users')
+            .then(res => res.json())
+            .then(out => initTable(out))
+            .catch(err => console.error(err));
+        };
+
+        function initTable(out) {
+            var table = document.getElementById('myTable');
+
+            for (let i = 0; i < out.length; i++) {
+                const elm = out[i];
+                var row = table.insertRow(i + 1);
+
+                var cell_id = row.insertCell(0);
+                var cell_firstname = row.insertCell(1);
+                var cell_lastname = row.insertCell(2);
+                var cell_email = row.insertCell(3);
+                var cell_login = row.insertCell(4);
+                var cell_password = row.insertCell(5);
+                var cell_address = row.insertCell(6);
+                var cell_phone = row.insertCell(7);
+
+                cell_id.innerHTML = elm.id;
+                cell_firstname.innerHTML = elm.firstname;
+                cell_lastname.innerHTML = elm.lastname;
+                cell_email.innerHTML = elm.email;
+                cell_login.innerHTML = elm.login;
+                cell_password.innerHTML = elm.password;
+                cell_address.innerHTML = elm.address;
+                cell_phone.innerHTML = elm.phone;
+            }
+        }
+
+
+
+    </script>
+    <!-- <body onload="init()"></body> -->
+</body>
+
+</html>
