@@ -38,7 +38,7 @@ exports.create = (req, res) => {
 
 //find user by id
 exports.findById = (req, res) => {
-    User.findById(req.params.id, (err, data) => {
+    User.findOne(req.params.id, (err, data) => {
         if (err) {
             res.status(500).send({ message: err.message || "Some error occured at get user by id" });
         } else {
